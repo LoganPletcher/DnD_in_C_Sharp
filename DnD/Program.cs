@@ -15,14 +15,13 @@ namespace DnD
         int WIS { get; set; }
         int CHA { get; set; }
     }
-    public struct Trait
+    public class Trait
     {
         public Trait(string s)
         {
             description = s;
         }
-        string description;
-        string desc { get { return description; } }
+        public readonly string description;
     }
     class Race : IAttributes
     {
@@ -73,8 +72,8 @@ namespace DnD
 
         string size;
         int landspeed, swimspeed, flyspeed;
-        List<string> racialLanguages;
-        List<Trait> racialTraits;
+        public List<string> racialLanguages;
+        public List<Trait> racialTraits;
 
         public void AddLanguages(string [] languages)
         {
@@ -95,43 +94,64 @@ namespace DnD
 
     class Entity : IAttributes
     {
-        private int strength, dexterity, constitution, intelligence, wisdom, charisma;
+        public Entity(int STR, int DEX, int CON, int INT, int WIS, int CHA, Race RACE, string ALIGNMENT, int EXP)
+        {
+            m_strength = STR;
+            m_dexterity = DEX;
+            m_constitution = CON;
+            m_intelligence = INT;
+            m_wisdom = WIS;
+            m_charisma = CHA;
+            m_race = RACE;
+            m_alignment = ALIGNMENT;
+            m_exp = EXP;
+            foreach(string language in RACE.racialLanguages)
+            {
+                m_languages.Add(language);
+            }
+            foreach(Trait trait in RACE.racialTraits)
+            {
+                m_traits.Add(trait);
+            }
+        }
+
+        private int m_strength, m_dexterity, m_constitution, m_intelligence, m_wisdom, m_charisma;
         int IAttributes.STR
         {
-            get { return strength; }
-            set { strength = value; }
+            get { return m_strength; }
+            set { m_strength = value; }
         }
         int IAttributes.DEX
         {
-            get { return dexterity; }
-            set { dexterity = value; }
+            get { return m_dexterity; }
+            set { m_dexterity = value; }
         }
         int IAttributes.CON
         {
-            get { return constitution; }
-            set { constitution = value; }
+            get { return m_constitution; }
+            set { m_constitution = value; }
         }
         int IAttributes.INT
         {
-            get { return intelligence; }
-            set { intelligence = value; }
+            get { return m_intelligence; }
+            set { m_intelligence = value; }
         }
         int IAttributes.WIS
         {
-            get { return wisdom; }
-            set { wisdom = value; }
+            get { return m_wisdom; }
+            set { m_wisdom = value; }
         }
         int IAttributes.CHA
         {
-            get { return charisma; }
-            set { charisma = value; }
+            get { return m_charisma; }
+            set { m_charisma = value; }
         }
 
-        string race;
-        string alignment;
-        int exp;
-        string[] languages;
-        Trait[] traits;
+        private Race m_race;
+        string m_alignment;
+        int m_exp;
+        List<string> m_languages;
+        List<Trait> m_traits;
     }
 
     class Program
